@@ -13,6 +13,7 @@ const ObjectDetection = () => {
   const [videoConstraints, setVideoConstraints] = useState({
     facingMode: "user", // Default to front-facing camera
   });
+  const [isRearCamera, setIsRearCamera] = useState(false); // State to track the current camera
 
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -61,10 +62,12 @@ const ObjectDetection = () => {
     }
   };
 
-  // Switch to rear camera
-  const switchToRearCamera = () => {
+  // Toggle between front and rear camera
+  const toggleCamera = () => {
+    const newCamera = isRearCamera ? "user" : "environment";
+    setIsRearCamera(!isRearCamera); // Toggle the camera state
     setVideoConstraints({
-      facingMode: "environment", // Switch to rear-facing camera
+      facingMode: newCamera, // Switch between 'user' (front) and 'environment' (rear)
     });
   };
 
@@ -84,7 +87,7 @@ const ObjectDetection = () => {
             ref={webcamRef}
             className="rounded-md w-full lg:h-[720px]"
             muted
-            videoConstraints={videoConstraints} // Pass the videoConstraints
+            videoConstraints={videoConstraints} // Pass the dynamic videoConstraints
           />
           {/* canvas */}
           <canvas
@@ -94,12 +97,12 @@ const ObjectDetection = () => {
         </div>
       )}
 
-      {/* Button to switch to rear camera */}
+      {/* Button to toggle between front and rear camera */}
       <button
-        onClick={switchToRearCamera}
+        onClick={toggleCamera}
         className="mt-6 p-3 bg-gray-700 text-white rounded-full shadow-md text-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-300"
       >
-        Switch to Rear Camera
+        {isRearCamera ? "Switch to Front Camera" : "Switch to Rear Camera"}
       </button>
     </div>
   );
