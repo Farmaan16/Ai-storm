@@ -1,15 +1,18 @@
 "use client";
 
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import {load as cocoSSDLoad} from "@tensorflow-models/coco-ssd";
+import { load as cocoSSDLoad } from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
-import {renderPredictions} from "@/utils/render-predictions";
+import { renderPredictions } from "@/utils/render-predictions";
 
 let detectInterval;
 
 const ObjectDetection = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [videoConstraints, setVideoConstraints] = useState({
+    facingMode: "user", // Default to front-facing camera
+  });
 
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -40,8 +43,6 @@ const ObjectDetection = () => {
         0.6
       );
 
-      //   console.log(detectedObjects);
-
       const context = canvasRef.current.getContext("2d");
       renderPredictions(detectedObjects, context);
     }
@@ -60,15 +61,22 @@ const ObjectDetection = () => {
     }
   };
 
+  // Switch to rear camera
+  const switchToRearCamera = () => {
+    setVideoConstraints({
+      facingMode: "environment", // Switch to rear-facing camera
+    });
+  };
+
   useEffect(() => {
     runCoco();
     showmyVideo();
   }, []);
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 relative flex flex-col items-center">
       {isLoading ? (
-        <div className="gradient-text">Loading AI Model...</div>
+        <div className="gradient-text text-center text-gray-500">Loading AI Model...</div>
       ) : (
         <div className="relative flex justify-center items-center gradient p-1.5 rounded-md">
           {/* webcam */}
@@ -76,6 +84,7 @@ const ObjectDetection = () => {
             ref={webcamRef}
             className="rounded-md w-full lg:h-[720px]"
             muted
+            videoConstraints={videoConstraints} // Pass the videoConstraints
           />
           {/* canvas */}
           <canvas
@@ -84,6 +93,14 @@ const ObjectDetection = () => {
           />
         </div>
       )}
+
+      {/* Button to switch to rear camera */}
+      <button
+        onClick={switchToRearCamera}
+        className="mt-6 p-3 bg-gray-700 text-white rounded-full shadow-md text-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-300"
+      >
+        Switch to Rear Camera
+      </button>
     </div>
   );
 };
