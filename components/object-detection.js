@@ -5,6 +5,7 @@ import Webcam from "react-webcam";
 import { load as cocoSSDLoad } from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
 import { renderPredictions } from "@/utils/render-predictions";
+import Loader from "./Loader";
 
 let detectInterval;
 
@@ -14,6 +15,7 @@ const ObjectDetection = () => {
     facingMode: "user", // Default to front-facing camera
   });
   const [isRearCamera, setIsRearCamera] = useState(false); // State to track the current camera
+  const [isWebcamActive, setIsWebcamActive] = useState(true); // Track webcam active state
 
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -71,24 +73,52 @@ const ObjectDetection = () => {
     });
   };
 
+  // Start/Stop Webcam
+  const toggleWebcam = () => {
+    if (isWebcamActive) {
+      // Stop the webcam stream by clearing the video element
+      if (webcamRef.current?.video?.srcObject) {
+        const stream = webcamRef.current.video.srcObject;
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+      }
+    } else {
+      // Start the webcam stream by re-enabling the webcam
+      setIsLoading(true); // Show loading message while initializing the webcam
+      webcamRef.current?.video?.play();
+    }
+
+    // Toggle the webcam active state
+    setIsWebcamActive(!isWebcamActive);
+  };
+
   useEffect(() => {
-    runCoco();
-    showmyVideo();
-  }, []);
+    if (isWebcamActive) {
+      runCoco();
+      showmyVideo();
+    }
+  }, [isWebcamActive]);
 
   return (
+    
     <div className="mt-8 relative flex flex-col items-center">
       {isLoading ? (
-        <div className="gradient-text text-center text-gray-500">Loading AI Model...</div>
+        <div className="justify-center items-center"><Loader/>
+        <span className="gradient-text text-center text-gray-500">Loading AI Model...</span>
+        
+        
+        </div>
       ) : (
         <div className="relative flex justify-center items-center gradient p-1.5 rounded-md">
           {/* webcam */}
-          <Webcam
-            ref={webcamRef}
-            className="rounded-md w-full lg:h-[720px]"
-            muted
-            videoConstraints={videoConstraints} // Pass the dynamic videoConstraints
-          />
+          {isWebcamActive && (
+            <Webcam
+              ref={webcamRef}
+              className="rounded-md w-full lg:h-[720px]"
+              muted
+              videoConstraints={videoConstraints} // Pass the dynamic videoConstraints
+            />
+          )}
           {/* canvas */}
           <canvas
             ref={canvasRef}
@@ -97,13 +127,24 @@ const ObjectDetection = () => {
         </div>
       )}
 
-      {/* Button to toggle between front and rear camera */}
-      <button
-        onClick={toggleCamera}
-        className="mt-6 p-3 bg-gray-700 text-white rounded-full shadow-md text-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-300"
-      >
-        {isRearCamera ? "Switch to Front Camera" : "Switch to Rear Camera"}
-      </button>
+      {/* Buttons to toggle between front/rear camera and start/stop webcam */}
+      <div className="mt-6 flex flex-col sm:flex-row gap-4 sm:gap-6">
+        {/* Button to toggle between front and rear camera */}
+        <button
+          onClick={toggleCamera}
+          className="p-3 bg-zinc-700 text-white rounded-3xl shadow-md text-sm hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-300 w-full sm:w-auto"
+        >
+          {isRearCamera ? "Switch to Front Camera" : "Switch to Rear Camera"}
+        </button>
+
+        {/* Button to Start/Stop Webcam */}
+        <button
+          onClick={toggleWebcam}
+          className="p-3 bg-zinc-700 text-white rounded-3xl shadow-md text-sm hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-300 w-full sm:w-auto"
+        >
+          {isWebcamActive ? "Stop Webcam" : "Start Webcam"}
+        </button>
+      </div>
     </div>
   );
 };
