@@ -1,13 +1,13 @@
+import { BlockPage } from "@/components/app-page";
 import ObjectDetection from "@/components/object-detection";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[100vh] p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-     <h1 className="font-extrabold text-3xl md:text-6xl lg:text-8xl ">Object detection</h1>
-     <ObjectDetection/>
+   <div>
 
-
-    </div>
+     <BlockPage/>
+   </div>
+    
   );
 }
