@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
@@ -6,6 +6,8 @@ import { load as cocoSSDLoad } from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
 import { renderPredictions } from "@/utils/render-predictions";
 import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/button";
+import { CameraIcon, SwitchCameraIcon } from "lucide-react";
 
 let detectInterval;
 
@@ -100,51 +102,56 @@ const ObjectDetection = () => {
   }, [isWebcamActive]);
 
   return (
-    
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[100vh] p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <h1 className=" mb-8 font-extrabold text-3xl md:text-6xl lg:text-8xl ">Object detection</h1>
+    <div className="bg-primary grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-[100vh] p-8 pb-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      {/* Title */}
+      <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 to-zinc-400 text-center max-w-full">
+        Object Detection
+      </h1>
+
+      {/* Loading State */}
       {isLoading ? (
-        <div className="justify-center items-center"><Loader/>
-        <span className="gradient-text text-center text-gray-500">Loading AI Model...</span>
-        
-        
+        <div className="justify-center items-center">
+          <Loader />
+          <span className="gradient-text text-center text-gray-500">Loading AI Model...</span>
         </div>
       ) : (
-        <div className="relative flex justify-center items-center gradient p-1.5 rounded-md">
-          {/* webcam */}
+        <div className="relative flex justify-center items-center gradient p-1.5 rounded-md w-full max-w-[100vw]">
+          {/* Webcam */}
           {isWebcamActive && (
             <Webcam
               ref={webcamRef}
-              className="rounded-md w-full lg:h-[720px]"
+              className="rounded-md w-full lg:h-[720px] max-h-[100vh] object-cover"
               muted
               videoConstraints={videoConstraints} // Pass the dynamic videoConstraints
             />
           )}
-          {/* canvas */}
-          <canvas
-            ref={canvasRef}
-            className="absolute top-0 left-0 z-99999 w-full lg:h-[720px]"
-          />
+
+          {/* Canvas */}
+          {isWebcamActive && (
+            <canvas
+              ref={canvasRef}
+              className="absolute top-0 left-0 z-99999 w-full lg:h-[720px] max-h-[100vh] object-cover"
+            />
+          )}
         </div>
       )}
 
       {/* Buttons to toggle between front/rear camera and start/stop webcam */}
-      <div className="mt-6 flex flex-col sm:flex-row gap-4 sm:gap-6">
-        {/* Button to toggle between front and rear camera */}
-        <button
+      <div className="flex flex-col sm:flex-row gap-4 mt-4">
+        <Button
           onClick={toggleCamera}
-          className="p-3 bg-zinc-700 text-white rounded-3xl shadow-md text-sm hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-300 w-full sm:w-auto"
+          className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
         >
-          {isRearCamera ? "Switch to Front Camera" : "Switch to Rear Camera"}
-        </button>
-
-        {/* Button to Start/Stop Webcam */}
-        <button
+          <SwitchCameraIcon className="w-4 h-4 mr-2" />
+          {isRearCamera ? "Front Camera" : "Rear Camera"}
+        </Button>
+        <Button
           onClick={toggleWebcam}
-          className="p-3 bg-zinc-700 text-white rounded-3xl shadow-md text-sm hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-300 w-full sm:w-auto"
+          className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
         >
-          {isWebcamActive ? "Stop Webcam" : "Start Webcam"}
-        </button>
+          <CameraIcon className="w-4 h-4 mr-2" />
+          {isWebcamActive ? "Stop Camera" : "Start Camera"}
+        </Button>
       </div>
     </div>
   );
