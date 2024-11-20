@@ -6,7 +6,6 @@ import '@tensorflow/tfjs'; // Import TensorFlow.js
 import Webcam from 'react-webcam';
 import Loader from '@/components/Loader';
 
-
 let detectInterval;
 
 const HandPoseDetection = () => {
@@ -35,15 +34,15 @@ const HandPoseDetection = () => {
   ];
 
   // Load the handpose model and set up detection
-  useEffect(() => {
-    const loadModel = async () => {
-      setIsLoading(true); // Set loading state to true when model loading starts
-      const handposeModel = await handpose.load();
-      setModel(handposeModel); // Set the model after loading
-      setIsLoading(false); // Set loading state to false when model is loaded
-    };
+  const loadModel = async () => {
+    setIsLoading(true); // Set loading state to true when model loading starts
+    const handposeModel = await handpose.load();
+    setModel(handposeModel); // Set the model after loading
+    setIsLoading(false); // Set loading state to false when model is loaded
+  };
 
-    loadModel();
+  useEffect(() => {
+    loadModel(); // Initial model loading
   }, []);
 
   const detectHands = async () => {
@@ -120,7 +119,8 @@ const HandPoseDetection = () => {
         tracks.forEach((track) => track.stop());
       }
     } else {
-      // Start the webcam stream by re-enabling the webcam
+      // When turning the webcam back on, reload the model
+      loadModel(); // Reload the model when the webcam is turned back on
       setIsLoading(true); // Show loading message while initializing the webcam
       webcamRef.current?.video?.play();
     }
@@ -137,8 +137,8 @@ const HandPoseDetection = () => {
   }, [isWebcamActive, model]);
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[100vh] p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-     <h1 className="font-extrabold text-3xl md:text-6xl lg:text-8xl ">Hand Pose detection</h1>
+    <div className="grid bg-primary grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-[100vh] p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <h1 className="font-extrabold text-3xl text-gray-50 md:text-6xl lg:text-8xl ">Hand Pose detection</h1>
       {isLoading ? (
         <div className="justify-center items-center">
           <Loader/>
