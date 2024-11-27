@@ -236,7 +236,7 @@ export function BlockPage() {
               </h3>
               <div className="flex space-x-4">
                 <a
-                  href="https://github.com"
+                  href="https://github.com/Farmaan16"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors"
@@ -254,7 +254,7 @@ export function BlockPage() {
                   <span className="sr-only">Twitter</span>
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://linkedin.com/in/mohammedfarman"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors"
