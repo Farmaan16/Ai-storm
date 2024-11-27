@@ -15,6 +15,8 @@ import {
   LinkedinIcon,
   BrainCircuit,
   Hand,
+  Smile,
+  ScanFaceIcon
 } from "lucide-react";
 import { BackgroundLines } from "./background-lines";
 import { ImageIcon, Target, UserPlus, Edit, Mic } from "lucide-react";
@@ -33,6 +35,27 @@ const aiModels = [
     demoLink: "/handpose", 
     icon: <Hand className="h-12 w-12 text-purple-500" />, 
   },
+  {
+    title: "Sentiment Analysis",
+    description: "Analyze the sentiment (positive, negative, neutral) of text data",
+    demoLink: "/sentiment-analysis",
+    icon: <Smile className="h-12 w-12 text-purple-500" />,
+  },
+  {
+    title: "Face Landmark Detection",
+    description:
+    "Detect and track facial landmarks (such as eyes, nose, mouth) in real-time using a pre-trained model.",
+    demoLink: "",
+    icon: <ScanFaceIcon className="h-12 w-12 text-purple-500" />,
+  },
+  
+  {
+    title: "Text Generation",
+    description: "Generate human-like text using language models",
+    demoLink: "",
+    icon: <Edit className="h-12 w-12 text-purple-500" />,
+  },
+  
   // {
   //   title: "Image Classification",
   //   description:
@@ -40,17 +63,11 @@ const aiModels = [
   //   demoLink: "",
   //   icon: <ImageIcon className="h-12 w-12 text-purple-500" />,
   // },
-  // {
-  //   title: "Pose Estimation",
-  //   description: "Estimate human pose from images or video in real-time",
-  //   demoLink: "",
-  //   icon: <UserPlus className="h-12 w-12 text-purple-500" />,
-  // },
   {
-    title: "Text Generation",
-    description: "Generate human-like text using language models",
+    title: "Pose Estimation",
+    description: "Estimate human pose from images or video in real-time",
     demoLink: "",
-    icon: <Edit className="h-12 w-12 text-purple-500" />,
+    icon: <UserPlus className="h-12 w-12 text-purple-500" />,
   },
   // {
   //   title: "Speech Recognition",
